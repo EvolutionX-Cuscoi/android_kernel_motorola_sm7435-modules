@@ -5142,7 +5142,7 @@ static void icnss_pci_smmu_fault_handler_irq(struct iommu_domain *domain,
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 5, 0))
-void icnss_register_iommu_fault_handler_irq(struct icnss_priv *priv)
+static void icnss_register_iommu_fault_handler_irq(struct icnss_priv *priv)
 {
 	struct platform_device *pdev = priv->pdev;
 	struct device *dev = &pdev->dev;
@@ -5160,7 +5160,7 @@ void icnss_unregister_iommu_fault_handler(struct icnss_priv *priv)
 	iommu_unregister_device_fault_handler(dev);
 }
 #else
-void icnss_register_iommu_fault_handler_irq(struct icnss_priv *priv)
+static void icnss_register_iommu_fault_handler_irq(struct icnss_priv *priv)
 {
 	qcom_iommu_set_fault_handler_irq(priv->iommu_domain,
 					 icnss_pci_smmu_fault_handler_irq,
