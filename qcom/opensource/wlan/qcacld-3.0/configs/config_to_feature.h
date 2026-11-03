@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -920,10 +920,6 @@
 
 #ifdef CONFIG_WLAN_SYSFS_RF_TEST_MODE
 #define FEATURE_SYSFS_RF_TEST_MODE (1)
-#endif
-
-#ifdef CONFIG_WLAN_SYSFS_BITRATES
-#define WLAN_SYSFS_BITRATES (1)
 #endif
 
 #ifdef CONFIG_RX_PERFORMANCE
@@ -1882,6 +1878,22 @@
 
 #ifdef CONFIG_WLAN_FEATURE_SAP_ACS_OPTIMIZE
 #define WLAN_FEATURE_SAP_ACS_OPTIMIZE (1)
+#endif
+
+#ifdef CONFIG_WLAN_FEATURE_NO_STA_SAP_CONCURRENCY
+#define WLAN_FEATURE_NO_STA_SAP_CONCURRENCY (1)
+#endif
+
+#ifdef CONFIG_WLAN_FEATURE_NO_STA_NAN_CONCURRENCY
+#define WLAN_FEATURE_NO_STA_NAN_CONCURRENCY (1)
+#endif
+
+#ifdef CONFIG_WLAN_FEATURE_NO_P2P_CONCURRENCY
+#define WLAN_FEATURE_NO_P2P_CONCURRENCY (1)
+#endif
+
+#ifdef CONFIG_WLAN_FEATURE_NO_SAP_NAN_CONCURRENCY
+#define WLAN_FEATURE_NO_SAP_NAN_CONCURRENCY (1)
 #endif
 
 #ifdef CONFIG_VERBOSE_DEBUG
@@ -2901,21 +2913,13 @@
 #define WLAN_BCN_RATECODE_ENABLE (1)
 #endif
 
+/* move utags build flags from kbuild to here */
+#define MOTO_UTAGS_MAC (1)
+
 #ifdef CONFIG_QDF_TIMER_MULTIPLIER_FRAC_ENABLE
 #ifdef CONFIG_QDF_TIMER_MULTIPLIER_FRAC
 #define QDF_TIMER_MULTIPLIER_FRAC CONFIG_QDF_TIMER_MULTIPLIER_FRAC
 #endif
 #endif
 
-#ifdef CONFIG_FEATURE_BLACKLIST_MGR
-#define FEATURE_BLACKLIST_MGR (1)
-#endif
-
-#ifdef CONFIG_FEATURE_ENABLE_CE_DP_IRQ_AFFINE
-#define FEATURE_ENABLE_CE_DP_IRQ_AFFINE (1)
-#endif
-
-#ifdef CONFIG_WLAN_BOOST_CPU_FREQ_IN_ROAM
-#define WLAN_BOOST_CPU_FREQ_IN_ROAM (1)
-#endif
 #endif /* CONFIG_TO_FEATURE_H */

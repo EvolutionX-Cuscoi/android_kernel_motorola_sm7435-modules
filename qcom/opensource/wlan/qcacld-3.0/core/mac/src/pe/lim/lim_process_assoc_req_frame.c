@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012-2021 The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -1914,6 +1914,7 @@ static bool lim_update_sta_ds(struct mac_context *mac_ctx, tSirMacAddr sa,
  * lim_update_sta_ctx() - add/del sta depending on connection state machine
  * @mac_ctx: pointer to Global MAC structure
  * @session: pointer to pe session entry
+ * @assoc_req: pointer to ASSOC/REASSOC Request frame
  * @sub_type: Assoc(=0) or Reassoc(=1) Requestframe
  * @sta_ds: station dph entry
  * @update_ctx: indicates if STA context already exist
@@ -1923,7 +1924,7 @@ static bool lim_update_sta_ds(struct mac_context *mac_ctx, tSirMacAddr sa,
  * Return: true of no error, false otherwise
  */
 static bool lim_update_sta_ctx(struct mac_context *mac_ctx, struct pe_session *session,
-			       uint8_t sub_type,
+			       tpSirAssocReq assoc_req, uint8_t sub_type,
 			       tpDphHashNode sta_ds, uint8_t update_ctx)
 {
 	tLimMlmStates mlm_prev_state;
@@ -1954,6 +1955,9 @@ static bool lim_update_sta_ctx(struct mac_context *mac_ctx, struct pe_session *s
 				STATUS_UNSPECIFIED_FAILURE,
 				session);
 
+			if (session->parsedAssocReq)
+				assoc_req =
+				    session->parsedAssocReq[sta_ds->assocId];
 			return false;
 		}
 	} else {
@@ -1985,6 +1989,9 @@ static bool lim_update_sta_ctx(struct mac_context *mac_ctx, struct pe_session *s
 
 				/* Restoring the state back. */
 				sta_ds->mlmStaContext.mlmState = mlm_prev_state;
+				if (session->parsedAssocReq)
+					assoc_req = session->parsedAssocReq[
+						sta_ds->assocId];
 				return false;
 			}
 		} else {
@@ -2004,6 +2011,9 @@ static bool lim_update_sta_ctx(struct mac_context *mac_ctx, struct pe_session *s
 
 				/* Restoring the state back. */
 				sta_ds->mlmStaContext.mlmState = mlm_prev_state;
+				if (session->parsedAssocReq)
+					assoc_req = session->parsedAssocReq[
+							sta_ds->assocId];
 				return false;
 			}
 		}
@@ -2244,7 +2254,7 @@ send_ind_to_sme:
 
 	/* If it is duplicate entry wait till the peer is deleted */
 	if (!dup_entry) {
-		if (!lim_update_sta_ctx(mac_ctx, session,
+		if (!lim_update_sta_ctx(mac_ctx, session, assoc_req,
 					sub_type, sta_ds, update_ctx))
 			return false;
 	}

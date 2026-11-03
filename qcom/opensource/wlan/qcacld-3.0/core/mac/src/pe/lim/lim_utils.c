@@ -2166,11 +2166,9 @@ void lim_switch_primary_secondary_channel(struct mac_context *mac,
 	mac->lim.gpchangeChannelData = NULL;
 
 	/* Store the new primary and secondary channel in session entries if different */
-	if (pe_session->curr_op_freq != new_channel_freq ||
-	    pe_session->ch_width != ch_width) {
-		pe_warn("freq: %d[%d] --> freq: %d[%d]",
-			pe_session->curr_op_freq, pe_session->ch_width,
-			new_channel_freq, ch_width);
+	if (pe_session->curr_op_freq != new_channel_freq) {
+		pe_warn("freq: %d --> freq: %d", pe_session->curr_op_freq,
+			new_channel_freq);
 		pe_session->curr_op_freq = new_channel_freq;
 	}
 	if (pe_session->htSecondaryChannelOffset !=
@@ -7495,11 +7493,15 @@ void lim_update_session_he_capable(struct mac_context *mac, struct pe_session *s
 	    !mac->mlme_cfg->vht_caps.vht_cap_info.b24ghz_band)
 		session->vhtCapability = 0;
 
-	if (!wlan_reg_is_24ghz_ch_freq(session->curr_op_freq))
+	if (!wlan_reg_is_24ghz_ch_freq(session->curr_op_freq)) {
 		session->he_config.ul_mu = mac->he_cap_5g.ul_mu;
+		session->he_config.rx_pream_puncturing =
+					mac->he_cap_5g.rx_pream_puncturing;
+	}
 
-	pe_debug("he_capable: %d ul mu %d",
-		 session->he_capable, session->he_config.ul_mu);
+	pe_debug("he_capable: %d ul mu %d, rx_pream_puncturing %d",
+		 session->he_capable, session->he_config.ul_mu,
+		 mac->he_cap_5g.rx_pream_puncturing);
 }
 
 void lim_update_session_he_capable_chan_switch(struct mac_context *mac,
