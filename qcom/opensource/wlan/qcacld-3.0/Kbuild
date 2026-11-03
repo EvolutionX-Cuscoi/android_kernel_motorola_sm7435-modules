@@ -64,6 +64,11 @@ endif
 
 include $(WLAN_ROOT)/configs/$(CONFIG_QCA_CLD_WLAN_PROFILE)_defconfig
 
+# bazel builds pktlog from CONFIG_PKT_LOG
+ifeq ($(CONFIG_PKT_LOG), y)
+CONFIG_REMOVE_PKT_LOG ?= n
+endif
+
 # add configurations in WLAN_CFG_OVERRIDE
 $(foreach cfg, $(WLAN_CFG_OVERRIDE), \
 	$(eval $(cfg)) \
