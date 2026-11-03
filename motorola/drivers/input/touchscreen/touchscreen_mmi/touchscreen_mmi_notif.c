@@ -456,8 +456,18 @@ static void ts_mmi_worker_func(struct work_struct *w)
 				break;
 
 		case TS_MMI_SET_GESTURES:
-			if (touch_cdev->touch_powered)
+			if (touch_cdev->touch_powered) {
+				/* Sleep already ran but power off is still
+				 * pending, redo sleep so gestures set in
+				 * between are not lost.
+				 */
+				if (atomic_read(&touch_cdev->touch_stopped) &&
+				    IS_DEEPSLEEP_MODE) {
+					ts_mmi_queued_resume(touch_cdev);
+					ts_mmi_queued_stop(touch_cdev);
+				}
 				break;
+			}
 
 			ts_mmi_queued_power_on(touch_cdev);
 			ts_mmi_queued_resume(touch_cdev);
